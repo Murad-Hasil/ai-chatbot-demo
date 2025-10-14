@@ -7,6 +7,10 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Base URL (safe for local + production)
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://ai-chatbot-demo-eight.vercel.app";
+
 export const metadata: Metadata = {
   title: "AI Chatbot Demo | Murad Hasil",
   description:
@@ -30,22 +34,23 @@ export const metadata: Metadata = {
   ],
   creator: "Murad Hasil",
   publisher: "Murad Hasil",
-  metadataBase: new URL("https://ai-chatbot-demo-eight.vercel.app"),
+  metadataBase: new URL(BASE_URL),
 
   openGraph: {
     title: "AI Chatbot Demo | Murad Hasil",
     description:
       "Try the AI Chatbot Demo — built with Next.js, Tailwind CSS, and Gemini API. Experience smooth chat, context handling, and modern UI.",
-    url: "https://ai-chatbot-demo-eight.vercel.app",
+    url: BASE_URL,
     siteName: "AI Chatbot Demo",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: `${BASE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "AI Chatbot Demo by Murad Hasil",
+        type: "image/png",
       },
     ],
   },
@@ -56,7 +61,7 @@ export const metadata: Metadata = {
     description:
       "Interactive chatbot built with Next.js, Tailwind CSS, and Gemini API — experience a clean UI and real-time chat flow.",
     creator: "@mbmuradhasil",
-    images: ["/og-image.png"],
+    images: [`${BASE_URL}/og-image.png`],
   },
 
   icons: {

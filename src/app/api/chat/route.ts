@@ -1,28 +1,35 @@
 // src/app/api/chat/route.ts
 // -----------------------------------------------------------
 // Author: MB
-// Purpose: Handle POST requests from the chatbot frontend and
-//          communicate with the Gemini 2.0 Flash model.
-// Usage:  Called by /chatbot page when user sends a message.
+// Purpose: API route that receives user messages and
+//          fetches AI replies from the Gemini 2.0 Flash model.
 // -----------------------------------------------------------
 
 import { NextResponse } from "next/server";
 
-// Handles POST requests to /api/chat
+// POST /api/chat
 export async function POST(req: Request) {
   try {
-    // Parse the JSON body sent from the frontend
     const { message } = await req.json();
 
-    // Validate input message
-    if (!message || message.trim().length === 0) {
+    // Basic validation
+    if (!message || !message.trim()) {
       return NextResponse.json(
-        { reply: "Message cannot be empty." },
+        { reply: "Please enter a message before sending." },
         { status: 400 }
       );
     }
 
-    // Send request to Gemini API
+    // Check for missing API key
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("Missing GEMINI_API_KEY in environment.");
+      return NextResponse.json(
+        { reply: "Server configuration error. Please try again later." },
+        { status: 500 }
+      );
+    }
+
+    // Call Gemini API
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
@@ -42,23 +49,18 @@ export async function POST(req: Request) {
     // Parse API response
     const data = await res.json();
 
-    // Extract reply text from Gemini's response.
-    // Supports multiple Gemini response formats for safety.
+    // Safely extract model reply
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ??
       data?.candidates?.[0]?.content?.parts?.[0]?.rawText ??
       data?.candidates?.[0]?.output ??
       "Sorry, I couldn’t generate a response.";
 
-    // Return the reply to the frontend
     return NextResponse.json({ reply });
   } catch (error) {
-    // Log the error (server console)
     console.error("Gemini API error:", error);
-
-    // Return a user-friendly message
     return NextResponse.json(
-      { error: "Something went wrong. Please try again later." },
+      { reply: "Server error. Please try again in a moment." },
       { status: 500 }
     );
   }

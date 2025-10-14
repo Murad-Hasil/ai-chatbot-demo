@@ -1,8 +1,7 @@
 // src/components/chat/ChatInput.tsx
 // -----------------------------------------------------------
 // Author: MB
-// Purpose: Handle user text input and sending messages to chatbot.
-// Notes: Removed clear chat button (Reset handled in header).
+// Purpose: Handles user input area and sending messages.
 // -----------------------------------------------------------
 
 "use client";
@@ -10,36 +9,31 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
 
-// -----------------------------------------------------------
-// Type Definitions
-// -----------------------------------------------------------
+// Props: parent se onSend function milta hai
 type ChatInputProps = {
-  onSend: (text: string) => Promise<void> | void; // Function to handle sending messages
+  onSend: (text: string) => Promise<void> | void;
 };
 
-// -----------------------------------------------------------
-// Component: ChatInput
-// -----------------------------------------------------------
 export default function ChatInput({ onSend }: ChatInputProps) {
-  const [value, setValue] = useState(""); // Current input value
-  const [sending, setSending] = useState(false); // Loading state while sending
+  const [value, setValue] = useState(""); // current input value
+  const [sending, setSending] = useState(false); // button loading state
 
-  // Handles send action (form submit or Enter key)
+  // Send button or Enter key press se message bhejna
   async function handleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
     const text = value.trim();
-    if (!text) return; // Ignore empty input
+    if (!text) return;
 
     setSending(true);
     try {
-      await onSend(text); // Send message to parent component
-      setValue(""); // Clear input field after sending
+      await onSend(text);
+      setValue(""); // message send hone ke baad field clear
     } finally {
-      setSending(false); // Reset sending state
+      setSending(false);
     }
   }
 
-  // Handles Enter / Shift+Enter key behavior
+  // Shift + Enter = new line | Enter = send
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -47,17 +41,14 @@ export default function ChatInput({ onSend }: ChatInputProps) {
     }
   }
 
-  // -----------------------------------------------------------
-  // UI
-  // -----------------------------------------------------------
   return (
     <div className="flex flex-col gap-2 w-full">
-      {/* Input form */}
+      {/* Input form container */}
       <form
         onSubmit={handleSubmit}
         className="flex items-end gap-3 bg-slate-50 dark:bg-slate-800 rounded-2xl p-3 border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-300"
       >
-        {/* Textarea input */}
+        {/* Textarea */}
         <textarea
           id="chat-input"
           rows={1}
@@ -81,7 +72,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
         </button>
       </form>
 
-      {/* Keyboard usage hint */}
+      {/* Small hint below input */}
       <p className="text-xs text-slate-400 mt-1 text-center">
         Press{" "}
         <kbd className="px-1 py-0.5 bg-slate-200 dark:bg-slate-600 rounded">
@@ -91,7 +82,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
         <kbd className="px-1 py-0.5 bg-slate-200 dark:bg-slate-600 rounded">
           Shift + Enter
         </kbd>{" "}
-        for new line
+        for a new line
       </p>
     </div>
   );

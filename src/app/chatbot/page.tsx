@@ -1,9 +1,8 @@
 // src/app/chatbot/page.tsx
 // -----------------------------------------------------------
 // Author: MB
-// Purpose: Chatbot UI page for portfolio demonstration.
-//          Manages chat history, message sending, retry, and reset.
-// Components: MessageList, ChatInput
+// Purpose: Chatbot demo page for portfolio showcase.
+// Handles chat flow, history, retry, and reset logic.
 // -----------------------------------------------------------
 
 "use client";
@@ -12,9 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import MessageList from "@/components/chat/MessageList";
 import ChatInput from "@/components/chat/ChatInput";
 
-// -----------------------------------------------------------
-// Type: Chat message structure
-// -----------------------------------------------------------
+// Message type used across components
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -23,37 +20,30 @@ type Msg = {
   status?: "pending" | "sent" | "error";
 };
 
-// Key used for saving messages in localStorage
+// LocalStorage key for saving chat history
 const STORAGE_KEY = "chatbot:messages";
 
 export default function ChatbotPage() {
-  // -----------------------------------------------------------
-  // State
-  // -----------------------------------------------------------
   const [messages, setMessages] = useState<Msg[]>([]);
   const [isWaiting, setIsWaiting] = useState(false);
   const lastMsgRef = useRef<HTMLDivElement>(null);
 
-  // -----------------------------------------------------------
-  // Load chat history once on mount
-  // -----------------------------------------------------------
+  // Load saved chat on mount
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setMessages(JSON.parse(raw));
     } catch (err) {
-      console.warn("Failed to load chat history", err);
+      console.warn("Chat history could not be loaded", err);
     }
   }, []);
 
-  // -----------------------------------------------------------
-  // Save messages + auto-scroll on update
-  // -----------------------------------------------------------
+  // Save chat + scroll to bottom on message update
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
     } catch {
-      /* ignore storage write errors */
+      /* ignore storage errors */
     }
 
     const timeout = setTimeout(() => {
@@ -63,11 +53,11 @@ export default function ChatbotPage() {
     return () => clearTimeout(timeout);
   }, [messages]);
 
-  // Generate a lightweight unique ID
+  // Simple unique ID helper
   const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
   // -----------------------------------------------------------
-  // Send user message -> API -> update assistant reply
+  // Send user message and fetch assistant reply
   // -----------------------------------------------------------
   async function sendMessage(text: string) {
     const userMsg: Msg = {
@@ -97,7 +87,7 @@ export default function ChatbotPage() {
       });
 
       const data = await res.json();
-      const reply = data?.reply ?? "Sorry, I couldn’t generate a response.";
+      const reply = data?.reply || "Sorry, I couldn’t generate a response.";
 
       setMessages((prev) =>
         prev.map((msg) =>
@@ -120,7 +110,7 @@ export default function ChatbotPage() {
   }
 
   // -----------------------------------------------------------
-  // Retry for failed assistant messages
+  // Retry handler for failed assistant messages
   // -----------------------------------------------------------
   async function retryMessage(userMessageContent: string) {
     setIsWaiting(true);
@@ -142,7 +132,7 @@ export default function ChatbotPage() {
       });
 
       const data = await res.json();
-      const reply = data?.reply ?? "Sorry, I couldn’t generate a response.";
+      const reply = data?.reply || "Sorry, I couldn’t generate a response.";
 
       setMessages((prev) =>
         prev.map((msg) =>
@@ -163,7 +153,7 @@ export default function ChatbotPage() {
   }
 
   // -----------------------------------------------------------
-  // Clear chat + localStorage
+  // Clear chat and remove saved history
   // -----------------------------------------------------------
   function resetChat() {
     localStorage.removeItem(STORAGE_KEY);
@@ -172,7 +162,7 @@ export default function ChatbotPage() {
   }
 
   // -----------------------------------------------------------
-  // UI Layout
+  // UI
   // -----------------------------------------------------------
   return (
     <main className="min-h-screen flex flex-col items-center justify-start bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-6 animate-fadeIn">
@@ -182,7 +172,7 @@ export default function ChatbotPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">AI Chatbot Demo</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
-              A demo chatbot built for this portfolio. Responses are generated by a hosted model.
+              A simple chatbot built for portfolio demonstration. Responses are AI-generated.
             </p>
           </div>
 

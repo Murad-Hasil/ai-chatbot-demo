@@ -1,8 +1,8 @@
 // src/components/chat/MessageList.tsx
 // -----------------------------------------------------------
 // Author: MB
-// Purpose: Display list of chat messages with animations,
-//          typing indicator, and retry support.
+// Purpose: Renders all chat messages, typing indicator,
+//          and auto-scroll anchor.
 // -----------------------------------------------------------
 
 "use client";
@@ -12,9 +12,7 @@ import { motion } from "framer-motion";
 import ChatBubble from "./ChatBubble";
 import TypingDots from "./TypingDots";
 
-// -----------------------------------------------------------
-// Types
-// -----------------------------------------------------------
+// Message and props types
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -26,13 +24,10 @@ type Msg = {
 type MessageListProps = {
   messages: Msg[];
   lastRef: React.RefObject<HTMLDivElement | null>;
-  onRetry: (userMessageContent: string) => void;
+  onRetry: (text: string) => void;
   isTyping: boolean;
 };
 
-// -----------------------------------------------------------
-// Component: MessageList
-// -----------------------------------------------------------
 export default function MessageList({
   messages,
   lastRef,
@@ -46,7 +41,7 @@ export default function MessageList({
       role="log"
     >
       <div className="space-y-4">
-        {/* Smooth animated message list */}
+        {/* Render each message */}
         {messages.map((m) => (
           <motion.div
             key={m.id}
@@ -58,7 +53,7 @@ export default function MessageList({
           </motion.div>
         ))}
 
-        {/* Typing indicator */}
+        {/* Typing animation while assistant responds */}
         {isTyping && (
           <motion.div
             key="typing-indicator"
@@ -68,6 +63,7 @@ export default function MessageList({
             transition={{ duration: 0.2 }}
             className="flex items-start gap-3"
           >
+            {/* Avatar placeholder for AI */}
             <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-500 text-sm font-semibold">
               AI
             </div>
@@ -77,7 +73,7 @@ export default function MessageList({
           </motion.div>
         )}
 
-        {/* Scroll anchor (keeps view pinned to bottom) */}
+        {/* Invisible anchor div — keeps scroll at bottom */}
         <div ref={lastRef} />
       </div>
     </div>
