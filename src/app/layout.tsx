@@ -29,11 +29,12 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Murad Hasil",
-      url: "https://portfolio-nextjs-woad-gamma.vercel.app/",
+      url: "https://personal-portfolio-nextjs-ebon.vercel.app/",
     },
   ],
   creator: "Murad Hasil",
   publisher: "Murad Hasil",
+  applicationName: "AI Chatbot Demo",
   metadataBase: new URL(BASE_URL),
 
   openGraph: {
@@ -91,10 +92,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preload Inter font for better performance */}
+        <link
+          rel="preload"
+          href="/_next/static/media/inter.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={inter.className}>
         <Providers>
           <Navbar />
-          <main className="min-h-screen flex flex-col items-center justify-start p-6">
+          <main
+            role="main"
+            className="min-h-screen flex flex-col items-center justify-start p-6"
+          >
             {children}
           </main>
           <Footer />

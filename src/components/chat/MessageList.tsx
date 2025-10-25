@@ -2,17 +2,17 @@
 // -----------------------------------------------------------
 // Author: MB
 // Purpose: Renders all chat messages, typing indicator,
-//          and auto-scroll anchor.
+//          and scroll anchor.
 // -----------------------------------------------------------
 
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ChatBubble from "./ChatBubble";
 import TypingDots from "./TypingDots";
 
-// Message and props types
+// Types
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -41,40 +41,46 @@ export default function MessageList({
       role="log"
     >
       <div className="space-y-4">
-        {/* Render each message */}
-        {messages.map((m) => (
-          <motion.div
-            key={m.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-          >
-            <ChatBubble message={m} onRetry={onRetry} />
-          </motion.div>
-        ))}
+        {/* Render each message with animation */}
+        <AnimatePresence initial={false}>
+          {messages.map((m) => (
+            <motion.div
+              key={m.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <ChatBubble message={m} onRetry={onRetry} />
+            </motion.div>
+          ))}
 
-        {/* Typing animation while assistant responds */}
-        {isTyping && (
-          <motion.div
-            key="typing-indicator"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="flex items-start gap-3"
-          >
-            {/* Avatar placeholder for AI */}
-            <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-500 text-sm font-semibold">
-              AI
-            </div>
-            <div className="bg-slate-100 dark:bg-slate-700 rounded-2xl px-4 py-2">
-              <TypingDots />
-            </div>
-          </motion.div>
-        )}
+          {/* Typing animation while AI responds */}
+          {isTyping && (
+            <motion.div
+              key="typing-indicator"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="flex items-start gap-3"
+              aria-label="AI is typing"
+            >
+              {/* AI Avatar */}
+              <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                AI
+              </div>
 
-        {/* Invisible anchor div — keeps scroll at bottom */}
-        <div ref={lastRef} />
+              {/* Typing dots bubble */}
+              <div className="bg-slate-100 dark:bg-slate-700 rounded-2xl px-4 py-2">
+                <TypingDots />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Invisible scroll anchor */}
+        <div ref={lastRef} aria-hidden="true" />
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+// src/components/chat/ChatBubble.tsx
 "use client";
 
 import React from "react";
@@ -23,10 +24,12 @@ export default function ChatBubble({ message, onRetry }: ChatBubbleProps) {
   const isUser = message.role === "user";
 
   // Format timestamp into a readable time
-  const time = new Date(message.createdAt).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const time = message.createdAt
+    ? new Date(message.createdAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
 
   return (
     <motion.div

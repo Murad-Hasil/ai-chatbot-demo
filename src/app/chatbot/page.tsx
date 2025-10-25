@@ -11,7 +11,9 @@ import React, { useEffect, useRef, useState } from "react";
 import MessageList from "@/components/chat/MessageList";
 import ChatInput from "@/components/chat/ChatInput";
 
-// Message type used across components
+// -----------------------------------------------------------
+// Type definition for messages
+// -----------------------------------------------------------
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -28,7 +30,9 @@ export default function ChatbotPage() {
   const [isWaiting, setIsWaiting] = useState(false);
   const lastMsgRef = useRef<HTMLDivElement>(null);
 
+  // -----------------------------------------------------------
   // Load saved chat on mount
+  // -----------------------------------------------------------
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -38,7 +42,9 @@ export default function ChatbotPage() {
     }
   }, []);
 
+  // -----------------------------------------------------------
   // Save chat + scroll to bottom on message update
+  // -----------------------------------------------------------
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
@@ -54,12 +60,15 @@ export default function ChatbotPage() {
   }, [messages]);
 
   // Simple unique ID helper
-  const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  const makeId = () =>
+    `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
   // -----------------------------------------------------------
   // Send user message and fetch assistant reply
   // -----------------------------------------------------------
   async function sendMessage(text: string) {
+    if (!text.trim()) return;
+
     const userMsg: Msg = {
       id: makeId(),
       role: "user",
@@ -86,7 +95,9 @@ export default function ChatbotPage() {
         body: JSON.stringify({ message: text }),
       });
 
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+
       const reply = data?.reply || "Sorry, I couldn’t generate a response.";
 
       setMessages((prev) =>
@@ -96,11 +107,16 @@ export default function ChatbotPage() {
             : msg
         )
       );
-    } catch {
+    } catch (err) {
+      console.error("Chat reply error:", err);
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === assistantMsg.id
-            ? { ...msg, content: "Error: failed to load reply.", status: "error" }
+            ? {
+                ...msg,
+                content: "Error: failed to load reply.",
+                status: "error",
+              }
             : msg
         )
       );
@@ -131,19 +147,28 @@ export default function ChatbotPage() {
         body: JSON.stringify({ message: userMessageContent }),
       });
 
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+
       const reply = data?.reply || "Sorry, I couldn’t generate a response.";
 
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === retryMsg.id ? { ...msg, content: reply, status: "sent" } : msg
+          msg.id === retryMsg.id
+            ? { ...msg, content: reply, status: "sent" }
+            : msg
         )
       );
-    } catch {
+    } catch (err) {
+      console.error("Retry reply error:", err);
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === retryMsg.id
-            ? { ...msg, content: "Error: failed to load reply.", status: "error" }
+            ? {
+                ...msg,
+                content: "Error: failed to load reply.",
+                status: "error",
+              }
             : msg
         )
       );
@@ -158,27 +183,40 @@ export default function ChatbotPage() {
   function resetChat() {
     localStorage.removeItem(STORAGE_KEY);
     setMessages([]);
-    setTimeout(() => lastMsgRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    setTimeout(
+      () => lastMsgRef.current?.scrollIntoView({ behavior: "smooth" }),
+      100
+    );
   }
 
   // -----------------------------------------------------------
   // UI
   // -----------------------------------------------------------
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-6 animate-fadeIn">
+    <main
+      className="min-h-screen flex flex-col items-center justify-start bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-6 animate-fadeIn"
+      role="main"
+    >
       <div className="w-full max-w-3xl mt-8">
         {/* Header */}
-        <header className="flex items-start justify-between mb-8">
+        <header
+          className="flex items-start justify-between mb-8"
+          aria-label="Chatbot header"
+        >
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">AI Chatbot Demo</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              AI Chatbot Demo
+            </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
-              A simple chatbot built for portfolio demonstration. Responses are AI-generated.
+              A simple chatbot built for portfolio demonstration. Responses are
+              AI-generated.
             </p>
           </div>
 
           {/* Reset button */}
           <button
             onClick={resetChat}
+            aria-label="Reset chat history"
             className="flex items-center gap-2 text-sm bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 px-3 py-1.5 rounded-lg transition-all duration-200 shadow-sm"
           >
             <svg
@@ -187,6 +225,7 @@ export default function ChatbotPage() {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -200,7 +239,16 @@ export default function ChatbotPage() {
         </header>
 
         {/* Chat area */}
-        <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 transition-all duration-300 p-4 animate-fadeIn">
+        <section
+          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 transition-all duration-300 p-4 animate-fadeIn"
+          aria-label="Chat conversation area"
+        >
+          {messages.length === 0 && (
+            <p className="text-center text-slate-400 py-10">
+              Start the conversation below 👇
+            </p>
+          )}
+
           <MessageList
             messages={messages}
             lastRef={lastMsgRef}

@@ -1,33 +1,33 @@
 # 🤖 AI Chatbot Demo
 
-A simple AI-powered chatbot built with **Next.js**, **TypeScript**, and **Tailwind CSS**.  
-It connects with the **Gemini 2.0 Flash API** to generate real-time AI responses.  
-This project is part of my personal portfolio to showcase clean UI design, API integration, and modern frontend development practices.
+A clean, AI-powered chatbot built with **Next.js**, **TypeScript**, and **Tailwind CSS**.  
+It uses the **Gemini 2.0 Flash API** to generate fast, intelligent responses in real time.  
+This project is part of my personal portfolio, showcasing modern UI design, API integration, and frontend best practices.
 
 ---
 
 ## 🚀 Live Demo
+
 🔗 [ai-chatbot-demo-eight.vercel.app](https://ai-chatbot-demo-eight.vercel.app)
 
 ---
 
 ## 🧩 Features
 
-- Clean, minimal chat interface
+- Minimal, responsive chat interface
 - Real-time AI responses using Gemini API
 - Message timestamps and delivery status
-- Persistent chat history with `localStorage`
-- Retry for failed messages
+- Persistent chat history (via `localStorage`)
+- Retry option for failed messages
 - Smooth animations with Framer Motion
-- Responsive layout for all devices
 - Light and dark mode support
-- Reset chat with one click
+- Clear chat with one click
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Next.js 14** (App Router)
+- **Next.js 14 (App Router)**
 - **TypeScript**
 - **Tailwind CSS**
 - **Framer Motion**
@@ -51,60 +51,64 @@ npm install
 # Run locally
 npm run dev
 ```
-Then open [http://localhost:3000](http://localhost:3000)
 
+Then open http://localhost:3000
 
 ## 🔑 Environment Variables
-```bash
+
 Create a .env.local file in the root directory:
 
+```bash
 GEMINI_API_KEY=your_google_gemini_key
 NEXT_PUBLIC_BASE_URL=https://ai-chatbot-demo-eight.vercel.app
 ```
-***Never commit your .env.local file to GitHub.***
+
+⚠️ Note: Never commit your .env.local file to GitHub.
 
 ## 🌐 Deployment
 
-*Deployed free on Vercel.
-Each commit automatically builds and updates the live demo.*
+Deployed free on Vercel.  
+Each push automatically triggers a new build and updates the live demo.
+
+---
 
 ## 🧠 What I Learned
 
-- **How to structure a clean React + Next.js project**
+- Structuring a clean, modular Next.js project
 
-- **Using server routes (/api) to handle secure API calls**
+- Handling secure API calls via /api routes
 
-- **Managing localStorage with React hooks**
+- Managing chat state and localStorage in React
 
-- **Designing with Tailwind for consistent light/dark mode**
+- Designing with Tailwind for consistent dark/light modes
 
-- **Writing readable, commented code for portfolio projects**
+- Writing readable, well-commented code for portfolios
+
 ---
-	
+
 ## ✨ Future Improvements
 
-- **Add voice input (SpeechRecognition API)**
+- Add voice input (SpeechRecognition API)
 
-- **Store chat history in a database**
+- Store chat history in a database
 
-- **Add authentication for user sessions**
+- Add authentication for user sessions
 
-- **Support multiple AI models (Gemini, OpenAI)**
+- Support multiple AI models (Gemini, OpenAI, etc.)
 
 ---
 
 ## 🧾 License
 
- *This project is open-source and free to use for learning purposes.*  
-*© 2025 Murad Hasil*
+This project is open source and free to use for learning purposes.  
+© 2025 **Murad Hasil**
 
 ---
+
 ## 💬 Connect with Me
 
-- Portfolio: https://portfolio-nextjs-woad-gamma.vercel.app
-
-- LinkedIn: https://linkedin.com/in/muradhasil
-
-- GitHub: https://github.com/Murad-Hasil
+- **Portfolio:** [View My Portfolio](https://personal-portfolio-nextjs-ebon.vercel.app/)
+- **LinkedIn:** [linkedin.com/in/muradhasil](https://www.linkedin.com/in/muradhasil/)
+- **GitHub:** [github.com/Murad-Hasil](https://github.com/Murad-Hasil)
 
 ---
