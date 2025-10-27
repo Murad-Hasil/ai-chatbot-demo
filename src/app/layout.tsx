@@ -1,3 +1,9 @@
+// src/app/layout.tsx
+// -----------------------------------------------------------
+// Root Layout
+// Sets up metadata, fonts, icons, and global structure.
+// -----------------------------------------------------------
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -7,9 +13,11 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Base URL (safe for local + production)
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://ai-chatbot-demo-eight.vercel.app";
+
+// Cache-busting version (update when icons change)
+const ICON_VERSION = "?v=2";
 
 export const metadata: Metadata = {
   title: "AI Chatbot Demo | Murad Hasil",
@@ -47,7 +55,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${BASE_URL}/og-image.png`,
+        url: `${BASE_URL}/og-image.png${ICON_VERSION}`,
         width: 1200,
         height: 630,
         alt: "AI Chatbot Demo by Murad Hasil",
@@ -62,22 +70,22 @@ export const metadata: Metadata = {
     description:
       "Interactive chatbot built with Next.js, Tailwind CSS, and Gemini API — experience a clean UI and real-time chat flow.",
     creator: "@mbmuradhasil",
-    images: [`${BASE_URL}/og-image.png`],
+    images: [`${BASE_URL}/og-image.png${ICON_VERSION}`],
   },
 
   icons: {
     icon: [
-      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/favicon-24x24.png", sizes: "24x24", type: "image/png" },
-      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icons/favicon-64x64.png", sizes: "64x64", type: "image/png" },
-      { url: "/icons/favicon-128x128.png", sizes: "128x128", type: "image/png" },
-      { url: "/icons/favicon-256x256.png", sizes: "256x256", type: "image/png" },
-      { url: "/icons/favicon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: `/icons/chatbot-icon-16.png${ICON_VERSION}`, sizes: "16x16", type: "image/png" },
+      { url: `/icons/chatbot-icon-24.png${ICON_VERSION}`, sizes: "24x24", type: "image/png" },
+      { url: `/icons/chatbot-icon-32.png${ICON_VERSION}`, sizes: "32x32", type: "image/png" },
+      { url: `/icons/chatbot-icon-64.png${ICON_VERSION}`, sizes: "64x64", type: "image/png" },
+      { url: `/icons/chatbot-icon-128.png${ICON_VERSION}`, sizes: "128x128", type: "image/png" },
+      { url: `/icons/chatbot-icon-256.png${ICON_VERSION}`, sizes: "256x256", type: "image/png" },
+      { url: `/icons/chatbot-icon-512.png${ICON_VERSION}`, sizes: "512x512", type: "image/png" },
     ],
     apple: [
       {
-        url: "/icons/apple-touch-icon.png",
+        url: `/icons/chatbot-apple-icon.png${ICON_VERSION}`,
         sizes: "180x180",
         type: "image/png",
       },
